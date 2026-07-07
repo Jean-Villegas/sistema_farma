@@ -1,0 +1,201 @@
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+UPDATE medicamentos SET
+  nombre      = 'Ibuprofeno',
+  descripcion = 'Antiinflamatorio no esteroideo (AINE) utilizado para aliviar el dolor, reducir la fiebre y disminuir la inflamación. Actúa inhibiendo las enzimas COX-1 y COX-2.',
+  dosis       = 'Adultos: 400-800 mg cada 6-8 horas. Máximo 3200 mg/día. Tomar con alimentos.',
+  laboratorio = 'Bayer / Pfizer',
+  categoria   = 'Analgésico/AINE',
+  efectos_secundarios   = 'Molestias gastrointestinales, náuseas, úlceras pépticas con uso prolongado, retención de líquidos, riesgo cardiovascular.',
+  contraindicaciones    = 'Úlcera péptica activa, insuficiencia renal grave, último trimestre del embarazo, hipersensibilidad a AINEs.'
+WHERE id = 1;
+
+UPDATE medicamentos SET
+  nombre      = 'Paracetamol',
+  descripcion = 'Analgésico y antipirético de uso común. Actúa a nivel central inhibiendo la síntesis de prostaglandinas. No tiene efecto antiinflamatorio significativo.',
+  dosis       = 'Adultos: 500-1000 mg cada 4-6 horas. Máximo 4 g/día. Niños: 10-15 mg/kg/dosis.',
+  laboratorio = 'Bristol-Myers / Tylenol',
+  categoria   = 'Analgésico/Antipirético',
+  efectos_secundarios   = 'Generalmente bien tolerado. En sobredosis: hepatotoxicidad grave. Raramente: reacciones alérgicas cutáneas.',
+  contraindicaciones    = 'Hepatopatía grave, alcoholismo crónico, hipersensibilidad al paracetamol.'
+WHERE id = 2;
+
+UPDATE medicamentos SET
+  nombre      = 'Amoxicilina',
+  descripcion = 'Antibiótico betalactámico de amplio espectro. Inhibe la síntesis de la pared celular bacteriana. Eficaz en infecciones respiratorias, urinarias y de piel.',
+  dosis       = 'Adultos: 500 mg cada 8 horas o 875 mg cada 12 horas. Curso de 7-10 días según infección.',
+  categoria   = 'Antibiótico',
+  efectos_secundarios   = 'Diarrea, náuseas, erupción cutánea, superinfección por cándida, colitis pseudomembranosa (rara).',
+  contraindicaciones    = 'Alergia a penicilinas o cefalosporinas, mononucleosis infecciosa.'
+WHERE id = 3;
+
+UPDATE medicamentos SET
+  nombre      = 'Metformina',
+  descripcion = 'Biguanida hipoglucemiante de primera línea para diabetes tipo 2. Reduce la glucosa hepática y mejora la sensibilidad a la insulina sin causar hipoglucemia.',
+  dosis       = 'Inicial: 500 mg con desayuno y cena. Máximo 2550-3000 mg/día.',
+  laboratorio = 'Merck / Glucophage',
+  categoria   = 'Antidiabético',
+  efectos_secundarios   = 'Náuseas, diarrea, vómitos, sabor metálico. Rara: acidosis láctica (en insuficiencia renal).',
+  contraindicaciones    = 'Insuficiencia renal (TFG < 30 mL/min), insuficiencia hepática, alcoholismo, insuficiencia cardíaca descompensada.'
+WHERE id = 4;
+
+UPDATE medicamentos SET
+  nombre      = 'Enalapril',
+  descripcion = 'Inhibidor de la enzima convertidora de angiotensina (IECA). Reduce la presión arterial y protege la función renal en diabéticos e hipertensos.',
+  dosis       = 'Inicial: 5 mg/día. Mantenimiento: 10-40 mg/día en 1 o 2 dosis.',
+  laboratorio = 'Merck / Vasotec',
+  categoria   = 'Antihipertensivo/IECA',
+  efectos_secundarios   = 'Tos seca persistente (muy común), hipotensión de primera dosis, hiperpotasemia, angioedema (raro pero grave).',
+  contraindicaciones    = 'Embarazo (teratógeno), antecedente de angioedema por IECA, estenosis arterial renal bilateral.'
+WHERE id = 5;
+
+UPDATE medicamentos SET
+  nombre      = 'Atorvastatina',
+  descripcion = 'Estatina inhibidora de la HMG-CoA reductasa. Reduce el colesterol LDL y triglicéridos; eleva el HDL. Previene eventos cardiovasculares.',
+  dosis       = 'Inicial: 10-20 mg una vez al día (noche). Rango: 10-80 mg/día.',
+  laboratorio = 'Pfizer / Lipitor',
+  categoria   = 'Hipolipemiante',
+  efectos_secundarios   = 'Mialgia, miopatía, elevación de transaminasas, raramente rabdomiolisis. Cefalea, trastornos gastrointestinales.',
+  contraindicaciones    = 'Hepatopatía activa, embarazo y lactancia, hipersensibilidad. Precaución con interacciones medicamentosas.'
+WHERE id = 6;
+
+UPDATE medicamentos SET
+  nombre      = 'Losartán',
+  descripcion = 'Antagonista del receptor de angiotensina II (ARA-II). Antihipertensivo que no causa tos. Protección cardiovascular y renal.',
+  dosis       = 'Inicial: 50 mg una vez al día. Rango: 25-100 mg/día.',
+  laboratorio = 'Merck / Cozaar',
+  categoria   = 'Antihipertensivo/ARA-II',
+  efectos_secundarios   = 'Hiperpotasemia, hipotensión, mareo, deterioro de función renal. Menos tos que IECAs.',
+  contraindicaciones    = 'Embarazo (teratógeno), hiperpotasemia severa.'
+WHERE id = 7;
+
+UPDATE medicamentos SET
+  nombre      = 'Omeprazol',
+  descripcion = 'Inhibidor de la bomba de protones (IBP). Bloquea la secreción ácida gástrica. Tratamiento de úlceras, ERGE y gastroprotección en usuarios de AINEs.',
+  dosis       = 'ERGE: 20 mg/día. Úlcera péptica: 20-40 mg/día. Erradicación H. pylori: 20 mg 2 veces/día.',
+  laboratorio = 'AstraZeneca / Prilosec',
+  categoria   = 'Antiulceroso/IBP',
+  efectos_secundarios   = 'Cefalea, diarrea, estreñimiento, náuseas. Uso prolongado: hipomagnesemia, hipocalcemia, fractura ósea.',
+  contraindicaciones    = 'Hipersensibilidad a IBPs, uso con nelfinavir. Precaución en hepatopatía severa.'
+WHERE id = 8;
+
+UPDATE medicamentos SET
+  nombre      = 'Amlodipino',
+  descripcion = 'Bloqueante de los canales de calcio dihidropiridínico. Antihipertensivo y antianginoso de acción prolongada. Bien tolerado en la mayoría de pacientes.',
+  dosis       = 'Hipertensión/angina: inicial 5 mg/día. Máximo 10 mg/día. Toma única diaria.',
+  laboratorio = 'Pfizer / Norvasc',
+  categoria   = 'Antihipertensivo/BCC',
+  efectos_secundarios   = 'Edema periférico (tobillo), rubefacción, palpitaciones, cefalea, mareo. Raramente: hiperplasia gingival.',
+  contraindicaciones    = 'Hipersensibilidad a dihidropiridinas, shock cardiogénico, angina inestable severa.'
+WHERE id = 9;
+
+UPDATE medicamentos SET
+  nombre      = 'Metoprolol',
+  descripcion = 'Betabloqueante cardioselectivo B1. Reduce la frecuencia cardíaca y la presión arterial. Indicado en hipertensión, angina, post-infarto e insuficiencia cardíaca.',
+  dosis       = 'Hipertensión: 50-200 mg/día en 1-2 dosis. IC: inicio 12.5-25 mg/día, incremento gradual.',
+  laboratorio = 'AstraZeneca / Lopressor',
+  categoria   = 'Betabloqueante',
+  efectos_secundarios   = 'Bradicardia, fatiga, frío en extremidades, broncoespasmo leve, disfunción eréctil, depresión.',
+  contraindicaciones    = 'Asma grave o EPOC, bradicardia sinusal, bloqueo AV 2-3 grado, shock cardiogénico.'
+WHERE id = 10;
+
+UPDATE medicamentos SET
+  nombre      = 'Azitromicina',
+  descripcion = 'Antibiótico macrólido de amplio espectro. Inhibe la síntesis proteica bacteriana. Tratamiento de infecciones respiratorias, ITS y de piel.',
+  dosis       = 'Adultos: 500 mg día 1, luego 250 mg días 2-5. ITS: 1 g dosis única.',
+  laboratorio = 'Pfizer / Zithromax',
+  categoria   = 'Antibiótico',
+  efectos_secundarios   = 'Náuseas, diarrea, dolor abdominal. Raramente: prolongación QT, hepatotoxicidad, reacciones alérgicas.',
+  contraindicaciones    = 'Hipersensibilidad a macrólidos, hepatopatía severa, arritmias cardíacas.'
+WHERE id = 11;
+
+UPDATE medicamentos SET
+  nombre      = 'Loratadina',
+  descripcion = 'Antihistamínico de segunda generación. Antagonista selectivo del receptor H1 periférico. No cruza la barrera hematoencefálica significativamente (no sedante).',
+  dosis       = 'Adultos y niños > 12 años: 10 mg una vez al día. Niños 2-12 años: 5 mg/día.',
+  laboratorio = 'Schering-Plough / Claritin',
+  categoria   = 'Antihistamínico',
+  efectos_secundarios   = 'Cefalea, somnolencia leve, sequedad de boca, taquicardia (rara).',
+  contraindicaciones    = 'Hipersensibilidad a loratadina. Precaución en insuficiencia hepática severa.'
+WHERE id = 12;
+
+UPDATE medicamentos SET
+  nombre      = 'Diazepam',
+  descripcion = 'Benzodiacepina de acción prolongada. Ansiolítico, sedante, anticonvulsivante y relajante muscular. Potencia la acción del GABA en el SNC.',
+  dosis       = 'Ansiedad: 2-10 mg 2-4 veces/día. Convulsiones: 5-10 mg IV/IM. Máximo 30 mg/episodio.',
+  laboratorio = 'Roche / Valium',
+  categoria   = 'Ansiolítico',
+  efectos_secundarios   = 'Sedación, somnolencia, ataxia, confusión, dependencia física y psicológica, depresión respiratoria en sobredosis.',
+  contraindicaciones    = 'Miastenia gravis, insuficiencia respiratoria severa, apnea del sueño, embarazo primer trimestre.'
+WHERE id = 13;
+
+UPDATE medicamentos SET
+  nombre      = 'Insulina Glargina',
+  descripcion = 'Insulina análoga de acción prolongada (24 horas). Sin pico pronunciado. Control glucémico basal en diabetes tipo 1 y 2. Administración subcutánea.',
+  dosis       = 'Individualizar dosis. Inicial en DM2: 10 UI/día SC a la misma hora. Ajustar según glucemia basal.',
+  laboratorio = 'Sanofi / Lantus',
+  categoria   = 'Insulina',
+  efectos_secundarios   = 'Hipoglucemia (principal riesgo), reacciones en sitio de inyección, lipodistrofia, aumento de peso.',
+  contraindicaciones    = 'Hipoglucemia activa. No mezclar con otras insulinas. Ajuste en insuficiencia renal o hepática.'
+WHERE id = 14;
+
+UPDATE medicamentos SET
+  nombre      = 'Prednisona',
+  descripcion = 'Corticosteroide oral de acción intermedia. Potente antiinflamatorio e inmunosupresor. Usado en enfermedades autoinmunes, alérgicas e inflamatorias.',
+  dosis       = 'Dosis variable: 5-60 mg/día según indicación. Reducir gradualmente al suspender.',
+  laboratorio = 'Pfizer / Deltasone',
+  categoria   = 'Corticosteroide',
+  efectos_secundarios   = 'Hiperglucemia, hipertensión, osteoporosis, aumento de peso, síndrome de Cushing, úlcera péptica.',
+  contraindicaciones    = 'Infecciones sistémicas no controladas, tuberculosis activa, herpes simplex ocular.'
+WHERE id = 15;
+
+UPDATE medicamentos SET
+  nombre      = 'Ciprofloxacino',
+  descripcion = 'Antibiótico fluoroquinolona de amplio espectro. Inhibe la ADN girasa bacteriana. Eficaz en infecciones urinarias, gastrointestinales y respiratorias.',
+  dosis       = 'ITU no complicada: 250-500 mg cada 12 horas por 3-7 días. Otras: 500-750 mg cada 12 horas.',
+  laboratorio = 'Bayer / Cipro',
+  categoria   = 'Antibiótico',
+  efectos_secundarios   = 'Náuseas, diarrea, cefalea. Raramente: tendinitis, prolongación QT, convulsiones, fotosensibilidad.',
+  contraindicaciones    = 'Menores de 18 años (excepto especial), embarazo, epilepsia no controlada. No tomar con antiácidos.'
+WHERE id = 16;
+
+UPDATE medicamentos SET
+  nombre      = 'Warfarina',
+  descripcion = 'Anticoagulante oral antagonista de la vitamina K. Previene trombos. Requiere monitorización del INR. Numerosas interacciones con alimentos y medicamentos.',
+  dosis       = 'Dosis ajustada según INR (objetivo 2-3). Toma única diaria a la misma hora. Inicio 2-5 mg/día.',
+  laboratorio = 'Bristol-Myers / Coumadin',
+  categoria   = 'Anticoagulante',
+  efectos_secundarios   = 'Hemorragia (principal riesgo), necrosis cutánea, alopecia. Requiere monitorización periódica del INR.',
+  contraindicaciones    = 'Embarazo, hemorragia activa, HTA severa no controlada, cirugía reciente del SNC.'
+WHERE id = 17;
+
+UPDATE medicamentos SET
+  nombre      = 'Salbutamol',
+  descripcion = 'Agonista B2-adrenérgico de acción corta (SABA). Broncodilatador de rescate en asma y EPOC. Relaja el músculo liso bronquial en minutos.',
+  dosis       = 'Crisis aguda: 2-4 pulsaciones cada 20 min por 3 dosis. Mantenimiento: 2 pulsaciones cada 4-6 horas.',
+  laboratorio = 'GlaxoSmithKline / Ventolin',
+  categoria   = 'Broncodilatador',
+  efectos_secundarios   = 'Temblor fino, taquicardia, cefalea, palpitaciones, hipopotasemia (dosis altas), nerviosismo.',
+  contraindicaciones    = 'Hipersensibilidad a salbutamol. Precaución en cardiopatía isquémica, hipertiroidismo.'
+WHERE id = 18;
+
+UPDATE medicamentos SET
+  nombre      = 'Levotiroxina',
+  descripcion = 'Hormona tiroidea sintética (T4). Tratamiento del hipotiroidismo y bocio. Reemplaza la hormona tiroidea endógena. Administración matinal en ayunas.',
+  dosis       = 'Individualizar. Inicio: 25-50 mcg/día. Incremento gradual cada 4-6 semanas. Controlar TSH.',
+  laboratorio = 'Abbott / Synthroid',
+  categoria   = 'Hormona Tiroidea',
+  efectos_secundarios   = 'Síntomas de hipertiroidismo si sobredosificación: taquicardia, insomnio, pérdida de peso, temblor.',
+  contraindicaciones    = 'Tirotoxicosis no tratada, infarto reciente, insuficiencia suprarrenal no tratada.'
+WHERE id = 19;
+
+UPDATE medicamentos SET
+  nombre      = 'Clopidogrel',
+  descripcion = 'Antiagregante plaquetario inhibidor del receptor P2Y12 del ADP. Previene trombosis arterial. Usado en síndrome coronario agudo, angioplastia e ictus isquémico.',
+  dosis       = 'Profilaxis: 75 mg una vez al día. Dosis de carga SCA/stent: 300-600 mg. Combinado con aspirina.',
+  laboratorio = 'Sanofi / Plavix',
+  categoria   = 'Antiagregante',
+  efectos_secundarios   = 'Sangrado (principal riesgo), equimosis, hematomas, dispepsia, diarrea, raramente PTT.',
+  contraindicaciones    = 'Hemorragia activa, hipersensibilidad. Precaución en riesgo hemorrágico. Interacción con omeprazol.'
+WHERE id = 20;

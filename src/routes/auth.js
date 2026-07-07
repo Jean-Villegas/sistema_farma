@@ -1,0 +1,65 @@
+const express = require('express');
+const router = express.Router();
+const authController = require('../controllers/authController');
+const { authenticateToken } = require('../middlewares/auth');
+
+// Registro de usuario (crea usuario + info personal)
+router.post('/register', async (req, res) => {
+  try {
+    const result = await authController.register(req);
+    res.status(result.status).json(result.data);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
+// Login de usuario
+router.post('/login', async (req, res) => {
+  try {
+    const result = await authController.login(req);
+    
+    if (result.data.token) {
+      // Establecer el token como cookie httpOnly (segura contra XSS)
+      res.cookie('token', result.data.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 24 * 60 * 60 * 1000 // 24 horas
+      });
+      // Eliminar el token del cuerpo: viaja solo como cookie httpOnly
+      delete result.data.token;
+    }
+    
+    res.status(result.status).json(result.data);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
+// Logout
+router.post('/logout', (req, res) => {
+  authController.logout(req, res);
+});
+
+// Sesión actual (sin error 401 si no hay login)
+router.get('/session', async (req, res) => {
+  try {
+    const result = await authController.getSession(req);
+    res.status(result.status).json(result.data);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
+// Usuario actual (protegido)
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    const result = await authController.getMe(req);
+    res.status(result.status).json(result.data);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
+module.exports = router;
