@@ -11,6 +11,7 @@ import FormField from './FormField';
 import Loading from './Loading';
 import Alert from './Alert';
 import { TIPOS_ANALISIS, formatDate } from '../utils/constants';
+import { downloadAnalisisPDF } from './pdf/AnalisisPDF';
 
 export default function Analisis() {
   const dispatch = useDispatch();
@@ -67,6 +68,15 @@ export default function Analisis() {
     } catch (err) { setAlert({ message: err, type: 'error' }); }
   };
 
+  const handlePdf = async (row) => {
+    try {
+      await downloadAnalisisPDF(row, row.cliente_username || user?.username);
+      setAlert({ message: 'PDF descargado', type: 'success' });
+    } catch (err) {
+      setAlert({ message: err?.message || 'No se pudo generar el PDF', type: 'error' });
+    }
+  };
+
   const columns = [
     ...(isMedico ? [{ key: 'cliente_username', label: 'Paciente', render: (v) => <span className="font-medium text-slate-800">{v || '--'}</span> }] : []),
     { key: 'fecha_examen', label: 'Fecha', render: (v) => formatDate(v) },
@@ -98,6 +108,7 @@ export default function Analisis() {
             data={list}
             onDelete={isCliente ? handleDelete : null}
             onView={isMedico ? openDiagnostico : null}
+            onPdf={handlePdf}
           />
         )}
       </div>

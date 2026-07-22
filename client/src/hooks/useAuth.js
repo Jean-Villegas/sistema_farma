@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { loginUser, registerUser, logoutUser, fetchMe, setView, clearError, clearSuccess } from '../features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { loginUser, registerUser, logoutUser, fetchMe, clearError, clearSuccess } from '../features/auth/authSlice';
 
 export function useAuth() {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.auth);
-  const { user, loading, error, success, isAuthenticated, view, initializing } = state;
+  const routerNavigate = useNavigate();
+  const state = useSelector((s) => s.auth);
+  const { user, loading, error, success, isAuthenticated, initializing } = state;
   const fetchedRef = useRef(false);
 
   useEffect(() => {
@@ -15,12 +17,41 @@ export function useAuth() {
     }
   }, [dispatch, initializing]);
 
-  const login = useCallback((username, password) => dispatch(loginUser({ username, password })), [dispatch]);
+  const login = useCallback(async (username, password) => {
+    const result = await dispatch(loginUser({ username, password }));
+    if (loginUser.fulfilled.match(result)) {
+      routerNavigate('/dashboard', { replace: true });
+    }
+    return result;
+  }, [dispatch, routerNavigate]);
+
   const register = useCallback((data) => dispatch(registerUser(data)), [dispatch]);
-  const logout = useCallback(() => dispatch(logoutUser()), [dispatch]);
-  const navigate = useCallback((v) => dispatch(setView(v)), [dispatch]);
+
+  const logout = useCallback(async () => {
+    await dispatch(logoutUser());
+    routerNavigate('/login', { replace: true });
+  }, [dispatch, routerNavigate]);
+
+  const navigate = useCallback((path) => {
+    const to = path.startsWith('/') ? path : `/${path}`;
+    routerNavigate(to);
+  }, [routerNavigate]);
+
   const resetError = useCallback(() => dispatch(clearError()), [dispatch]);
   const resetSuccess = useCallback(() => dispatch(clearSuccess()), [dispatch]);
 
-  return { user, loading, error, success, isAuthenticated, view, initializing, login, register, logout, navigate, resetError, resetSuccess };
+  return {
+    user,
+    loading,
+    error,
+    success,
+    isAuthenticated,
+    initializing,
+    login,
+    register,
+    logout,
+    navigate,
+    resetError,
+    resetSuccess,
+  };
 }

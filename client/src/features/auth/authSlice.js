@@ -36,15 +36,30 @@ export const logoutUser = createAsyncThunk('auth/logout', async (_, { rejectWith
   }
 });
 
-const initialState = { user: null, loading: false, error: null, success: null, isAuthenticated: false, view: 'landing', initializing: true };
+const initialState = {
+  user: null,
+  loading: false,
+  error: null,
+  success: null,
+  isAuthenticated: false,
+  initializing: true,
+};
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setView: (state, action) => { state.view = action.payload; },
     clearError: (state) => { state.error = null; },
     clearSuccess: (state) => { state.success = null; },
+    setUserFromProfile: (state, action) => {
+      if (!action.payload) return;
+      state.user = {
+        ...state.user,
+        id: action.payload.id ?? state.user?.id,
+        username: action.payload.username ?? state.user?.username,
+        rol: action.payload.rol ?? state.user?.rol,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -54,13 +69,11 @@ const authSlice = createSlice({
         state.initializing = false;
         state.user = action.payload.usuario;
         state.isAuthenticated = true;
-        state.view = 'dashboard';
       })
       .addCase(loginUser.rejected, (state, action) => { state.loading = false; state.initializing = false; state.error = action.payload; })
       .addCase(registerUser.pending, (state) => { state.loading = true; state.error = null; state.success = null; })
       .addCase(registerUser.fulfilled, (state) => {
         state.loading = false;
-        state.view = 'landing';
         state.success = 'Cuenta creada. Ya puedes iniciar sesión.';
       })
       .addCase(registerUser.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
@@ -72,23 +85,23 @@ const authSlice = createSlice({
         if (!u) {
           state.user = null;
           state.isAuthenticated = false;
-          state.view = 'landing';
           return;
         }
         state.user = { id: u.id, username: u.username, rol: u.rol };
         state.isAuthenticated = true;
-        state.view = 'dashboard';
       })
       .addCase(fetchMe.rejected, (state) => {
         state.loading = false;
         state.initializing = false;
         state.user = null;
         state.isAuthenticated = false;
-        state.view = 'landing';
       })
-      .addCase(logoutUser.fulfilled, (state) => { state.user = null; state.isAuthenticated = false; state.view = 'landing'; });
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+      });
   },
 });
 
-export const { setView, clearError, clearSuccess } = authSlice.actions;
+export const { clearError, clearSuccess, setUserFromProfile } = authSlice.actions;
 export default authSlice.reducer;

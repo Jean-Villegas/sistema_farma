@@ -76,6 +76,16 @@ class ApiService {
 
   // Usuarios (admin)
   getUsuarios = () => this.request('/usuarios');
+  getUsuario = (id) => this.request(`/usuarios/${id}`);
+  getPerfilPublico = (id) => this.request(`/usuarios/public/${id}`);
+  updatePerfilSocial = (data) => this.request('/usuarios/profile/social', { method: 'PUT', body: JSON.stringify(data) });
+
+  // Chat
+  getChatContactos = () => this.request('/chat/contactos');
+  getChatHistorial = (userId) => this.request(`/chat/historial/${userId}`);
+
+  // Foros por autor
+  getForosByAutor = (userId) => this.request(`/foros/autor/${userId}`);
 }
 
 export default new ApiService();

@@ -14,6 +14,16 @@ router.get('/search', async (req, res) => {
   }
 });
 
+// Publicaciones de un usuario (antes de /:id)
+router.get('/autor/:userId', async (req, res) => {
+  try {
+    const result = await foroController.getByAutor(req);
+    res.status(result.status).json(result.data);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
 // Listar todos los foros (público)
 router.get('/', async (req, res) => {
   try {

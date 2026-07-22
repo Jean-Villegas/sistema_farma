@@ -55,6 +55,36 @@ class ForoModel {
     });
   }
 
+  static async findByAutorId(autorId) {
+    const [rows] = await pool.execute(`
+      SELECT f.id, f.titulo, f.contenido, f.created_at,
+             u.username as autor_username, u.id as autor_id, u.rol as autor_rol,
+             (SELECT COUNT(*) FROM foro_comentarios fc WHERE fc.foro_id = f.id) as comentarios_count
+      FROM foros f
+      JOIN usuarios u ON f.autor_id = u.id
+      WHERE f.autor_id = ?
+      ORDER BY f.created_at DESC
+    `, [autorId]);
+    return await this._attachMedicamentos(rows);
+  }
+
+  static async update(id, { titulo, contenido }) {
+    const updates = [];
+    const values = [];
+    if (titulo !== undefined) {
+      updates.push('titulo = ?');
+      values.push(titulo);
+    }
+    if (contenido !== undefined) {
+      updates.push('contenido = ?');
+      values.push(contenido);
+    }
+    if (updates.length === 0) return false;
+    values.push(id);
+    await pool.execute(`UPDATE foros SET ${updates.join(', ')} WHERE id = ?`, values);
+    return true;
+  }
+
   static async create({ autorId, titulo, contenido, medicamentosIds }) {
     const [result] = await pool.execute(
       'INSERT INTO foros (autor_id, titulo, contenido) VALUES (?, ?, ?)',

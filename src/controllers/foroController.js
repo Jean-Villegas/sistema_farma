@@ -1,5 +1,20 @@
 const { ForoModel, ForoComentarioModel } = require('../models/ForoModel');
 
+// Listar foros de un autor
+const getByAutor = async (req) => {
+  try {
+    const autorId = parseInt(req.params.userId, 10);
+    if (!autorId) {
+      return { status: 400, data: { mensaje: 'Usuario inválido' } };
+    }
+    const foros = await ForoModel.findByAutorId(autorId);
+    return { status: 200, data: foros };
+  } catch (error) {
+    console.error(error);
+    return { status: 500, data: { mensaje: 'Error en el servidor' } };
+  }
+};
+
 // Listar todos los foros
 const getAll = async (req) => {
   try {
@@ -160,4 +175,4 @@ const removeComentario = async (req) => {
   }
 };
 
-module.exports = { getAll, getById, create, remove, update, addComentario, removeComentario, search };
+module.exports = { getAll, getById, getByAutor, create, remove, update, addComentario, removeComentario, search };

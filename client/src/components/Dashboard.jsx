@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuth } from '../hooks/useAuth';
 import { useForm } from '../hooks/useForm';
@@ -6,7 +7,7 @@ import { fetchForos, createForo } from '../features/foros/forosSlice';
 import { fetchPerfil } from '../features/perfil/perfilSlice';
 import Loading from './Loading';
 import Alert from './Alert';
-import { formatDate } from '../utils/constants';
+import { formatDate, getInitials } from '../utils/constants';
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -92,10 +93,12 @@ export default function Dashboard() {
         {loading ? <Loading /> : foros.map((foro) => (
           <div key={foro.id} className="card p-5 animate-fade-in">
             <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600 text-xs"><i className="fas fa-user" /></div>
-                <span className="text-xs text-sky-600 font-semibold">{foro.autor_username || 'Usuario'}</span>
-              </div>
+              <Link to={`/u/${foro.autor_id}`} className="flex items-center gap-2 hover:opacity-80">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-600 flex items-center justify-center text-white text-xs font-bold">
+                  {getInitials(foro.autor_username)}
+                </div>
+                <span className="text-xs text-sky-600 font-semibold">@{foro.autor_username || 'Usuario'}</span>
+              </Link>
               <span className="badge bg-sky-50 text-sky-600 text-xs">{formatDate(foro.created_at)}</span>
             </div>
             <h3 className="font-bold text-slate-800 mb-1">{foro.titulo}</h3>

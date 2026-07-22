@@ -56,42 +56,59 @@ const register = async (req) => {
     }
 
     if (cedula) {
-      const existingCedula = await ClienteModel.findByCedula(cedula);
-      if (existingCedula) {
+      const [cedulaCliente, cedulaMedico] = await Promise.all([
+        ClienteModel.findByCedula(cedula),
+        MedicoModel.findByCedula(cedula),
+      ]);
+      if (cedulaCliente || cedulaMedico) {
         return { status: 400, data: { mensaje: 'La cédula ya está registrada' } };
       }
     }
 
     // Crear usuario
-    const usuarioId = await UsuarioModel.create({
-      username,
-      password,
-      email,
-      rol: rol || 'Cliente'
-    });
-
-    // Si es cliente, crear registro de información personal
-    if (!rol || rol === 'Cliente') {
-      await ClienteModel.create({
-        usuarioId,
-        nombre: nombre || username,
-        apellido: apellido || '',
-        cedula: cedula || '',
-        telefono: telefono || '',
-        direccion: direccion || '',
-        fecha_nacimiento: fecha_nacimiento || null,
-        genero: genero || null
+    let usuarioId;
+    try {
+      usuarioId = await UsuarioModel.create({
+        username,
+        password,
+        email,
+        rol: rol || 'Cliente'
       });
-    }
 
-    // Si es médico, crear registro en tabla medicos
-    if (rol === 'Medico') {
-      await MedicoModel.create({
-        usuarioId,
-        especialidad: '',
-        cedula: cedula || '',
-        telefono: telefono || ''
-      });
+      // Si es cliente, crear registro de información personal
+      if (!rol || rol === 'Cliente') {
+        await ClienteModel.create({
+          usuarioId,
+          nombre: nombre || username,
+          apellido: apellido || '',
+          cedula: cedula || '',
+          telefono: telefono || '',
+          direccion: direccion || '',
+          fecha_nacimiento: fecha_nacimiento || null,
+          genero: genero || null
+        });
+      }
+
+      // Si es médico, crear registro en tabla medicos
+      if (rol === 'Medico') {
+        await MedicoModel.create({
+          usuarioId,
+          especialidad: '',
+          cedula: cedula || '',
+          telefono: telefono || ''
+        });
+      }
+    } catch (createError) {
+      if (usuarioId) {
+        try { await UsuarioModel.delete(usuarioId); } catch (_) { /* ignore rollback errors */ }
+      }
+      if (createError?.code === 'ER_DUP_ENTRY') {
+        const field = String(createError.sqlMessage || '').includes('cedula')
+          ? 'La cédula ya está registrada'
+          : 'Ya existe un registro con esos datos';
+        return { status: 400, data: { mensaje: field } };
+      }
+      throw createError;
     }
 
     return { status: 201, data: { mensaje: 'Usuario registrado correctamente', id: usuarioId } };

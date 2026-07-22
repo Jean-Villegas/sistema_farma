@@ -1,6 +1,6 @@
 import { usePagination } from '../hooks/usePagination';
 
-export default function DataTable({ columns, data, onEdit, onDelete, onView, searchable = true, pageSize = 10 }) {
+export default function DataTable({ columns, data, onEdit, onDelete, onView, onPdf, searchable = true, pageSize = 10 }) {
   const { pageItems, currentPage, totalPages, totalItems, goToPage, nextPage, prevPage, search, searchTerm } = usePagination(data, pageSize);
 
   return (
@@ -25,7 +25,7 @@ export default function DataTable({ columns, data, onEdit, onDelete, onView, sea
                   {col.label}
                 </th>
               ))}
-              {(onEdit || onDelete || onView) && <th className="text-left p-3 font-semibold text-slate-600 w-24">Acciones</th>}
+              {(onEdit || onDelete || onView || onPdf) && <th className="text-left p-3 font-semibold text-slate-600 w-28">Acciones</th>}
             </tr>
           </thead>
           <tbody>
@@ -39,7 +39,7 @@ export default function DataTable({ columns, data, onEdit, onDelete, onView, sea
                       {col.render ? col.render(row[col.key], row) : row[col.key] ?? '--'}
                     </td>
                   ))}
-                  {(onEdit || onDelete || onView) && (
+                  {(onEdit || onDelete || onView || onPdf) && (
                     <td className="p-3">
                       <div className="flex gap-1.5">
                         {onView && (
@@ -49,6 +49,15 @@ export default function DataTable({ columns, data, onEdit, onDelete, onView, sea
                             title="Revisar y diagnosticar"
                           >
                             <i className="fas fa-stethoscope" />
+                          </button>
+                        )}
+                        {onPdf && (
+                          <button
+                            onClick={() => onPdf(row)}
+                            className="btn btn-sm bg-rose-50 text-rose-600 hover:bg-rose-100"
+                            title="Descargar PDF"
+                          >
+                            <i className="fas fa-file-pdf" />
                           </button>
                         )}
                         {onEdit && <button onClick={() => onEdit(row)} className="btn btn-sm bg-amber-50 text-amber-600 hover:bg-amber-100"><i className="fas fa-edit" /></button>}

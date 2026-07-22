@@ -20,6 +20,7 @@ async function initDatabase() {
       password VARCHAR(255) NOT NULL,
       email VARCHAR(100) UNIQUE NOT NULL,
       rol ENUM('Cliente', 'Medico', 'Administrador') DEFAULT 'Cliente',
+      bio TEXT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )
@@ -186,6 +187,22 @@ async function initDatabase() {
       PRIMARY KEY (foro_id, medicamento_id),
       FOREIGN KEY (foro_id) REFERENCES foros(id) ON DELETE CASCADE,
       FOREIGN KEY (medicamento_id) REFERENCES medicamentos(id) ON DELETE CASCADE
+    )
+  `);
+
+  // Tabla de chat en vivo
+  await connection.query(`
+    CREATE TABLE IF NOT EXISTS chat_mensajes (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      emisor_id INT NOT NULL,
+      receptor_id INT NOT NULL,
+      contenido TEXT NOT NULL,
+      leido TINYINT(1) DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (emisor_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+      FOREIGN KEY (receptor_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+      INDEX idx_chat_pair (emisor_id, receptor_id),
+      INDEX idx_chat_created (created_at)
     )
   `);
 

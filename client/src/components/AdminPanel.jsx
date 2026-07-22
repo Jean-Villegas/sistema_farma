@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchClientes, createCliente, deleteCliente } from '../features/clientes/clientesSlice';
 import { fetchMedicos } from '../features/medicos/medicosSlice';
@@ -83,7 +84,19 @@ export default function AdminPanel() {
       <Alert message={alert?.message} type={alert?.type} onClose={() => setAlert(null)} />
 
       <div className="card p-5">
-        <h2 className="text-lg font-extrabold text-slate-800 mb-4"><i className="fas fa-shield-alt text-sky-500 mr-2" />Panel de Administración</h2>
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <h2 className="text-lg font-extrabold text-slate-800">
+            <i className="fas fa-shield-alt text-sky-500 mr-2" />
+            Panel de Administración
+          </h2>
+          <Link
+            to="/admin/sistema"
+            className="text-xs font-semibold text-slate-400 hover:text-amber-600 transition-colors"
+            title="Ruta oculta de sistema"
+          >
+            <i className="fas fa-lock mr-1" /> Sistema
+          </Link>
+        </div>
 
         <div className="flex gap-2 mb-6 overflow-x-auto">
           {tabs.map((tab) => (

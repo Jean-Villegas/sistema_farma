@@ -18,6 +18,7 @@ const getAll = async (req) => {
 const getById = async (req) => {
   try {
     const { id } = req.params;
+    await UsuarioModel.ensureBioColumn();
     const usuario = await UsuarioModel.findById(id);
 
     if (!usuario) {
@@ -27,6 +28,24 @@ const getById = async (req) => {
     return { status: 200, data: usuario };
   } catch (error) {
     console.error(error);
+    return { status: 500, data: { mensaje: 'Error en el servidor' } };
+  }
+};
+
+// Perfil social público (sin email ni cédula)
+const getPublicProfile = async (req) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (!id) {
+      return { status: 400, data: { mensaje: 'Usuario inválido' } };
+    }
+    const perfil = await UsuarioModel.findPublicById(id);
+    if (!perfil) {
+      return { status: 404, data: { mensaje: 'Usuario no encontrado' } };
+    }
+    return { status: 200, data: perfil };
+  } catch (error) {
+    console.error('Error getPublicProfile:', error);
     return { status: 500, data: { mensaje: 'Error en el servidor' } };
   }
 };
@@ -129,6 +148,91 @@ const remove = async (req) => {
   }
 };
 
+// Actualizar perfil social (editable por el propio usuario)
+const updateSocialProfile = async (req) => {
+  try {
+    const usuarioId = req.user.id;
+    await UsuarioModel.ensureBioColumn();
+
+    const username = typeof req.body?.username === 'string' ? req.body.username.trim() : undefined;
+    const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : undefined;
+    const bio = typeof req.body?.bio === 'string' ? req.body.bio.trim().slice(0, 500) : undefined;
+    const nombre = typeof req.body?.nombre === 'string' ? req.body.nombre.trim() : undefined;
+    const apellido = typeof req.body?.apellido === 'string' ? req.body.apellido.trim() : undefined;
+    const telefono = typeof req.body?.telefono === 'string' ? req.body.telefono.trim() : undefined;
+    const especialidad = typeof req.body?.especialidad === 'string' ? req.body.especialidad.trim() : undefined;
+
+    if (username !== undefined && !/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
+      return { status: 400, data: { mensaje: 'Usuario inválido (3-30 caracteres, letras/números/_)' } };
+    }
+    if (email !== undefined && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return { status: 400, data: { mensaje: 'Email inválido' } };
+    }
+
+    if (username) {
+      const byUser = await UsuarioModel.findByUsername(username);
+      if (byUser && byUser.id !== usuarioId) {
+        return { status: 400, data: { mensaje: 'El nombre de usuario ya está en uso' } };
+      }
+    }
+    if (email) {
+      const byEmail = await UsuarioModel.findByEmail(email);
+      if (byEmail && byEmail.id !== usuarioId) {
+        return { status: 400, data: { mensaje: 'El email ya está en uso' } };
+      }
+    }
+
+    await UsuarioModel.update(usuarioId, {
+      username,
+      email,
+      bio: bio !== undefined ? bio : undefined,
+    });
+
+    if (req.user.rol === 'Cliente') {
+      const existente = await ClienteModel.findByUsuarioId(usuarioId);
+      if (existente) {
+        await ClienteModel.update(usuarioId, { nombre, apellido, telefono });
+      } else if (nombre || apellido) {
+        await ClienteModel.create({
+          usuarioId,
+          nombre: nombre || req.user.username,
+          apellido: apellido || '',
+          cedula: '',
+          telefono: telefono || '',
+          direccion: '',
+          fecha_nacimiento: null,
+          genero: null,
+        });
+      }
+    } else if (req.user.rol === 'Medico') {
+      const existente = await MedicoModel.findByUsuarioId(usuarioId);
+      if (existente) {
+        await MedicoModel.update(usuarioId, { telefono, especialidad });
+      }
+    }
+
+    const perfil = await UsuarioModel.findPublicById(usuarioId);
+    const privado = await UsuarioModel.findById(usuarioId);
+
+    return {
+      status: 200,
+      data: {
+        mensaje: 'Perfil actualizado correctamente',
+        perfil,
+        usuario: {
+          id: privado.id,
+          username: privado.username,
+          rol: privado.rol,
+          email: privado.email,
+        },
+      },
+    };
+  } catch (error) {
+    console.error('Error updateSocialProfile:', error);
+    return { status: 500, data: { mensaje: 'Error al actualizar el perfil' } };
+  }
+};
+
 // Actualizar perfil completo (usuario + cliente/medico + salud)
 const updateFullProfile = async (req) => {
   try {
@@ -190,4 +294,14 @@ const search = async (req) => {
   }
 };
 
-module.exports = { getAll, getById, create, update, remove, updateFullProfile, search };
+module.exports = {
+  getAll,
+  getById,
+  getPublicProfile,
+  create,
+  update,
+  remove,
+  updateFullProfile,
+  updateSocialProfile,
+  search,
+};

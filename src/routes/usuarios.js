@@ -31,6 +31,26 @@ router.get('/search', authenticateToken, authorizeRoles('Medico', 'Administrador
   }
 });
 
+// Perfil social público (cualquier autenticado)
+router.get('/public/:id', authenticateToken, async (req, res) => {
+  try {
+    const result = await usuarioController.getPublicProfile(req);
+    res.status(result.status).json(result.data);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
+// Actualizar perfil social propio
+router.put('/profile/social', authenticateToken, async (req, res) => {
+  try {
+    const result = await usuarioController.updateSocialProfile(req);
+    res.status(result.status).json(result.data);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+});
+
 // Actualizar perfil completo (propio)
 // Debe ir antes de '/:id' para evitar colisión con rutas dinámicas
 router.put('/profile/me', authenticateToken, async (req, res) => {

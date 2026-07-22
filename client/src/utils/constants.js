@@ -8,14 +8,21 @@ export const COLORES_PIEL = ['blanco', 'moreno_claro', 'moreno_medio', 'moreno_o
 
 export const TIPOS_POST = ['diagnostico', 'tratamiento', 'receta', 'nota'];
 
+/** Ítems visibles en el menú. Las rutas ocultas de admin no van aquí. */
 export const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Inicio', icon: 'fa-home' },
-  { id: 'farmacologia', label: 'Farmacología', icon: 'fa-capsules' },
-  { id: 'analisis', label: 'Mis Análisis', icon: 'fa-flask', medicoLabel: 'Análisis Pacientes' },
-  { id: 'medicos', label: 'Médicos', icon: 'fa-user-md', roles: ['Administrador'] },
-  { id: 'foros', label: 'Comunidad', icon: 'fa-comments' },
-  { id: 'perfil', label: 'Mi Perfil', icon: 'fa-user-edit' },
-  { id: 'admin', label: 'Admin', icon: 'fa-shield-alt', roles: ['Administrador'] },
+  { path: '/dashboard', label: 'Inicio', icon: 'fa-home' },
+  { path: '/farmacologia', label: 'Farmacología', icon: 'fa-capsules' },
+  { path: '/analisis', label: 'Mis Análisis', icon: 'fa-flask', medicoLabel: 'Análisis Pacientes' },
+  { path: '/medicos', label: 'Médicos', icon: 'fa-user-md', roles: ['Administrador'] },
+  { path: '/foros', label: 'Comunidad', icon: 'fa-comments' },
+  { path: '/chat', label: 'Chat', icon: 'fa-comment-dots' },
+  { path: '/perfil', label: 'Mi Perfil', icon: 'fa-user-edit' },
+  { path: '/admin', label: 'Admin', icon: 'fa-shield-alt', roles: ['Administrador'] },
+];
+
+/** Rutas ocultas exclusivas del administrador (no aparecen en NAV_ITEMS). */
+export const ADMIN_HIDDEN_ROUTES = [
+  { path: '/admin/sistema', label: 'Panel de Sistema' },
 ];
 
 export function getInitials(name) {

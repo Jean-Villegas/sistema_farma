@@ -37,6 +37,14 @@ class MedicoModel {
     });
   }
 
+  static findByCedula(cedula) {
+    return new Promise((resolve, reject) => {
+      pool.execute('SELECT * FROM medicos WHERE cedula = ?', [cedula])
+        .then(([rows]) => resolve(rows[0] || null))
+        .catch(err => reject(err));
+    });
+  }
+
   static create({ usuarioId, especialidad, cedula, telefono }) {
     return new Promise((resolve, reject) => {
       pool.execute(

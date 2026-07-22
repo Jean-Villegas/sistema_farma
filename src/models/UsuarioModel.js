@@ -14,8 +14,11 @@ class UsuarioModel {
     return new Promise((resolve, reject) => {
       pool.execute(`
         SELECT u.id, u.username, u.email, u.rol, u.created_at,
+               COALESCE(u.bio, '') as bio,
                COALESCE(c.cedula, m.cedula) as cedula,
-               COALESCE(c.nombre, u.username) as nombre_completo
+               COALESCE(c.nombre, u.username) as nombre_completo,
+               c.apellido, c.telefono as telefono_cliente, m.telefono as telefono_medico,
+               m.especialidad
         FROM usuarios u
         LEFT JOIN clientes c ON u.id = c.usuario_id
         LEFT JOIN medicos m ON u.id = m.usuario_id
@@ -24,6 +27,31 @@ class UsuarioModel {
         .then(([rows]) => resolve(rows[0] || null))
         .catch(err => reject(err));
     });
+  }
+
+  static async ensureBioColumn() {
+    try {
+      await pool.execute('ALTER TABLE usuarios ADD COLUMN bio TEXT NULL');
+    } catch (err) {
+      if (err.code !== 'ER_DUP_FIELDNAME') throw err;
+    }
+  }
+
+  static async findPublicById(id) {
+    await this.ensureBioColumn();
+    const [rows] = await pool.execute(`
+      SELECT u.id, u.username, u.rol, u.created_at,
+             COALESCE(u.bio, '') as bio,
+             COALESCE(c.nombre, u.username) as nombre,
+             COALESCE(c.apellido, '') as apellido,
+             m.especialidad,
+             (SELECT COUNT(*) FROM foros f WHERE f.autor_id = u.id) as publicaciones_count
+      FROM usuarios u
+      LEFT JOIN clientes c ON u.id = c.usuario_id
+      LEFT JOIN medicos m ON u.id = m.usuario_id
+      WHERE u.id = ?
+    `, [id]);
+    return rows[0] || null;
   }
 
   static findByUsername(username) {
@@ -81,7 +109,7 @@ class UsuarioModel {
     });
   }
 
-  static update(id, { username, email, rol }) {
+  static update(id, { username, email, rol, bio }) {
     return new Promise((resolve, reject) => {
       const updates = [];
       const values = [];
@@ -97,6 +125,10 @@ class UsuarioModel {
       if (rol) {
         updates.push('rol = ?');
         values.push(rol);
+      }
+      if (bio !== undefined) {
+        updates.push('bio = ?');
+        values.push(bio);
       }
 
       if (updates.length === 0) {
